@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Чат</title>
+	<link rel="stylesheet" href="style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- <script src="./jquery.fileupload.js"></script> -->
+	<script src="/socket.io/socket.io.js"></script>
+	<!-- <script src="./index.js"></script> -->
+	<!-- <img src="1(2).jpg" alt="тут фон сайта" id = "fon">  -->
+</head>
+
+<body>
+	<h2 class="msg">Сообщения</h2>
+	<hr><br>
+	<div class="msg" id="all_mess"></div><br>
+
+	<!-- Добавление фото на сайт -->
+	</b>
+	<div class="Profile">
+		<a href="#study"></a>
+		<div class="msg">
+			<h1>Профиль</h1>
+		</div>
+		<hr><br>
+		<form id="messForm">
+			<label for="name" vspace="100px">Имя</label><br>
+			<input type="text" name="name" id="name" widht="40px" placeholder="Введите имя" class="form-control">
+			<br><br>
+			<tr>
+				<td>
+					<a href="http://localhost:4000/">Добавить фото профиля</a>
+				</td>
+			</tr>
+			<div class="img_wrapper">
+				<label for="avatar">Аватар</label><br>
+				<!-- <form method="post" enctype="multipart/form-data" action="filetoupload">
+									
+									<input type="file" name="file"/>
+									<input type="submit" value="Submit"/>
+								  </form> -->
+				<!-- <input type="file" name="avatar" class="form-control" id="avatar" style="width: 115px;" action="/upload">   -->
+			</div>
+			<!-- Попытка подключить js -->
+			<!-- <script src="../index.js" type="text/javascript">
+								readdir("C:/Users/Хозяин/Desktop/JavaScript/uploads", function(err, items) {
+    								for (var i=0; i<items.length; i++) {
+      								 var file = path + '/' + items[i];
+									 console.log("Start: " + file);
+									}
+								})
+								
+							</script> -->
+
+
+			<!-- <img src=" " id="file"  style="border-radius: 100px" height="150px" width="150px" vspace="10px"> -->
+			<img src="Bitcoin.jpg" style="border-radius: 100px" height="150px" width="150px" vspace="10px">
+	</div>
+	<div class="chat">
+		<hr>
+		<textarea style="width: 900px" name="message" id="message" class="form-control" font-size="200px"
+			placeholder="Введите сообщение"></textarea><br>
+		<input type="submit" value="Отправить" class="btn btn-danger">
+	</div>
+	</form>
+	<script>
+		// Функция для работы с данными на сайте
+		$(function () {
+			var socket = io.connect();
+			// Делаем переменные на:
+			var $form = $("#messForm") // Форму сообщений
+			var $name = $("#name") // Поле с имен	ем
+			var $textarea = $("#message") // Текстовое поле
+			var $all_messages = $("#all_mess") // Блок с сообщениями
+			//var $avatar = $('#avatar').get.file.originalname // Обращение к одному выбранному файлу
+
+			// Отслеживаем нажатие на кнопку в форме сообщений
+			$form.submit(function (event) {
+				// Предотвращаем классическое поведение формы
+				event.preventDefault();
+				// В сокет отсылаем новое событие 'send mess',
+				// в событие передаем различные параметры и данные
+				socket.emit('send mess', { mess: $textarea.val(), name: $name.val(), /*avatar: $avatar.val()*/ });
+				// Очищаем поле с сообщением
+				$textarea.val('');
+			});
+			// Здесь отслеживаем событие 'add mess', 
+			// которое должно приходить из сокета в случае добавления нового сообщения
+			socket.on('add mess', function (data) {
+				// Встраиваем полученное сообщение в блок с сообщениями
+				// У блока с сообщением будет тот класс, который соответвует пользователю что его отправил
+
+				$all_messages.append(/*data.avater + */"<b>" + data.name + "</b>: " + data.mess + "</div><br>");
+			});
+		});
+	</script>
+</body>
+
+</html>
